@@ -100,7 +100,6 @@ export const LoginForm: React.FC = () => {
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-          </div>
         </div>
 
         <div className="flex items-center justify-between text-sm">
