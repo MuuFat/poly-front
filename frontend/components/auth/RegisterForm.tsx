@@ -18,7 +18,7 @@ export const RegisterForm: React.FC = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
@@ -93,29 +93,31 @@ export const RegisterForm: React.FC = () => {
               placeholder="name@example.com"
             />
           </div>
-          <div className="relative">
+          <div>
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="new-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="appearance-none relative block w-full px-4 pr-12 py-3 border border-border placeholder-muted-foreground text-foreground rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-background/50 backdrop-blur-sm"
-              placeholder="••••••••"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center px-1 text-zinc-300 hover:text-white bg-transparent focus:outline-none"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4 align-middle" /> : <Eye className="w-4 h-4 align-middle" />}
-            </button>
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="appearance-none relative block w-full px-4 pr-12 py-3 border border-border placeholder-muted-foreground text-foreground rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-background/50 backdrop-blur-sm"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center px-1 text-zinc-300 hover:text-white bg-transparent focus:outline-none"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4 align-middle" /> : <Eye className="w-4 h-4 align-middle" />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -132,13 +134,13 @@ export const RegisterForm: React.FC = () => {
           <div className="ml-2 text-sm">
             <label htmlFor="terms" className="text-muted-foreground">
               I agree to the{' '}
-              <a href="#" className="font-medium text-primary hover:text-primary/80 transition-colors">
+              <button type="button" className="font-medium text-primary hover:text-primary/80 transition-colors">
                 Terms of Service
-              </a>{' '}
+              </button>{' '}
               and{' '}
-              <a href="#" className="font-medium text-primary hover:text-primary/80 transition-colors">
+              <button type="button" className="font-medium text-primary hover:text-primary/80 transition-colors">
                 Privacy Policy
-              </a>
+              </button>
             </label>
           </div>
         </div>
