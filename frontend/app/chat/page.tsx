@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { chatService, Message } from "@/services/chatService";
 import { useAuthStore } from "@/store/authStore";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -45,8 +45,7 @@ export default function ChatPage() {
   const [isFetchingConversation, setIsFetchingConversation] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const searchParams = useSearchParams();
-  const convId = searchParams?.get('id');
+  const [convId, setConvId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -64,10 +63,20 @@ export default function ChatPage() {
   useEffect(() => {
     // Only clear messages when not viewing a saved conversation
     if (!convId) setMessages([]);
-  }, [language]);
+  }, [language, convId]);
 
   // Load conversation messages when an `id` query param is present
   useEffect(() => {
+    // read convId from the URL on mount if not already set
+    if (!convId) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) setConvId(id);
+      } catch (e) {
+        // ignore
+      }
+    }
     if (!convId) return;
     let cancelled = false;
     const fetchConversation = async () => {
