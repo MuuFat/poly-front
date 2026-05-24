@@ -9,6 +9,7 @@ export interface Message {
 
 export interface Conversation {
   id: string;
+  title?: string | null;
   language: string;
   lastMessage: Message | null;
   messageCount: number;

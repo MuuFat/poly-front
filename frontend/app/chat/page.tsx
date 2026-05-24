@@ -4,12 +4,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send,
-  Languages,
   History,
   User,
   LogOut,
   Loader2,
   Sparkles,
+  BookOpen,
+  Languages,
 } from "lucide-react";
 import { chatService, Message } from "@/services/chatService";
 import { useAuthStore } from "@/store/authStore";
@@ -20,19 +21,6 @@ import { twMerge } from "tailwind-merge";
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-const LANGUAGES = [
-  "English",
-  "Spanish",
-  "French",
-  "German",
-  "Italian",
-  "Japanese",
-  "Korean",
-  "Chinese",
-  "Russian",
-  "Portuguese",
-];
 
 export default function ChatPage() {
   const { user, logout, isAuthenticated } = useAuthStore();
@@ -45,6 +33,14 @@ export default function ChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [convId, setConvId] = useState<string | null>(null);
+
+  const startNewConversation = () => {
+    setConvId(null);
+    setMessages([]);
+    setInput("");
+    setLanguage(user?.targetLanguage || "English");
+    router.replace("/chat");
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -162,6 +158,13 @@ export default function ChatPage() {
 
               <div className="space-y-1">
                 <button
+                  onClick={startNewConversation}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/15 transition-colors"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>New Conversation</span>
+                </button>
+                <button
                   onClick={() => router.push("/conversations")}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-zinc-400 hover:text-white"
                 >
@@ -170,25 +173,11 @@ export default function ChatPage() {
                 </button>
                 <div className="pt-4 pb-2">
                   <span className="px-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                    Target Language
+                    Current Target Language
                   </span>
                 </div>
-                <div className="grid grid-cols-1 gap-1 px-2">
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setLanguage(lang)}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm",
-                        language === lang
-                          ? "bg-primary/10 text-primary font-medium border border-primary/20"
-                          : "text-zinc-500 hover:bg-white/5 hover:text-zinc-300",
-                      )}
-                    >
-                      <Languages className="w-4 h-4" />
-                      {lang}
-                    </button>
-                  ))}
+                <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-300">
+                  {language}
                 </div>
               </div>
             </div>
@@ -258,30 +247,41 @@ export default function ChatPage() {
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-2">
-                  Start learning {language}
+                  Practice {language} with a tutor
                 </h3>
                 <p className="text-zinc-500 leading-relaxed">
-                  Every message you send helps you practice and improve. Our AI
-                  is tuned to help you master {language} through natural
-                  conversation.
+                  Ask for corrections, examples, translations, or short
+                  practice tasks. This chat is tuned for language learning,
+                  not general-purpose conversation.
                 </p>
               </div>
-              <div className="grid grid-cols-1 gap-2 w-full">
+              <div className="grid grid-cols-1 gap-2 w-full text-left">
                 <button
                   onClick={() =>
-                    setInput(`How do I say "Hello" in ${language}?`)
+                    setInput(`Please correct my sentence and explain the mistake: I am student.`)
                   }
-                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm text-left"
+                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm flex items-start gap-3"
                 >
-                  How do I say "Hello" in {language}?
+                  <BookOpen className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+                  Correct my sentence
                 </button>
                 <button
                   onClick={() =>
-                    setInput(`Tell me a fun fact about ${language} culture.`)
+                    setInput(`Give me 5 beginner phrases in ${language} with short Turkish meanings.`)
                   }
-                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm text-left"
+                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm flex items-start gap-3"
                 >
-                  Tell me a fun fact about {language} culture.
+                  <Languages className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+                  Give me beginner phrases
+                </button>
+                <button
+                  onClick={() =>
+                    setInput(`Ask me a short practice question in ${language}.`)
+                  }
+                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm flex items-start gap-3"
+                >
+                  <Sparkles className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+                  Quiz me
                 </button>
               </div>
             </div>
@@ -364,7 +364,7 @@ export default function ChatPage() {
             </button>
           </form>
           <p className="text-center text-[10px] text-zinc-600 mt-4 uppercase tracking-[0.2em]">
-            PolyLingo can make mistakes. Check important info.
+            PolyLingo is a language tutor. It can still make mistakes.
           </p>
         </div>
       </main>

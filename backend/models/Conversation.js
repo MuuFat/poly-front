@@ -9,9 +9,10 @@ const ConversationMessageSchema = new mongoose.Schema({
 const ConversationSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     language: { type: String, required: true },
+    title: { type: String, default: null },
     messages: { type: [ConversationMessageSchema], default: [] },
 }, { timestamps: true });
 
-ConversationSchema.index({ user: 1, language: 1, updatedAt: -1 });
+ConversationSchema.index({ user: 1, updatedAt: -1 });
 
 module.exports = mongoose.model('Conversation', ConversationSchema);

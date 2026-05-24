@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, MessageSquare, Calendar, Clock, ArrowRight, Loader2, Search } from 'lucide-react';
+import { ChevronLeft, MessageSquare, Calendar, Clock, ArrowRight, Loader2, Search, Plus } from 'lucide-react';
 import { chatService, Conversation } from '@/services/chatService';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
@@ -42,6 +42,7 @@ export default function ConversationsPage() {
   }, [isAuthenticated, router]);
 
   const filteredConversations = conversations.filter(c => 
+    c.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     c.language.toLowerCase().includes(searchTerm.toLowerCase()) ||
     c.lastMessage?.content?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -88,12 +89,11 @@ export default function ConversationsPage() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 space-y-3">
                 <div className="flex items-center gap-3">
+                  <h3 className="text-lg font-semibold text-white truncate">
+                    {conv.title || 'New conversation'}
+                  </h3>
                   <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-wider">
                     {conv.language}
-                  </span>
-                  <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest flex items-center gap-1.5">
-                    <Calendar className="w-3 h-3" />
-                    {new Date(conv.updatedAt).toLocaleDateString()}
                   </span>
                 </div>
 
@@ -111,6 +111,11 @@ export default function ConversationsPage() {
                     Updated {new Date(conv.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
+
+                <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest flex items-center gap-1.5">
+                  <Calendar className="w-3 h-3" />
+                  {new Date(conv.updatedAt).toLocaleDateString()}
+                </span>
               </div>
 
               <div className="p-2 rounded-xl bg-white/5 border border-white/5 group-hover:bg-primary group-hover:text-white transition-all">
@@ -139,18 +144,27 @@ export default function ConversationsPage() {
               <span>Back to Chat</span>
             </button>
             <h1 className="text-4xl font-bold tracking-tight">Conversation History</h1>
-            <p className="text-zinc-500">Your past learning sessions and practice logs.</p>
+            <p className="text-zinc-500">Newest conversations appear first.</p>
           </div>
           
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <input 
-              type="text" 
-              placeholder="Search conversations..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all backdrop-blur-sm"
-            />
+          <div className="flex w-full sm:w-auto gap-3">
+            <button
+              onClick={() => router.push('/chat')}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 transition-all font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              New Conversation
+            </button>
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <input 
+                type="text" 
+                placeholder="Search conversations..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all backdrop-blur-sm"
+              />
+            </div>
           </div>
         </header>
 
