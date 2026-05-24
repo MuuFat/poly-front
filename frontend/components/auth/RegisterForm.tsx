@@ -105,14 +105,14 @@ export const RegisterForm: React.FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="appearance-none relative block w-full px-4 py-3 border border-border placeholder-muted-foreground text-foreground rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-background/50 backdrop-blur-sm"
+              className="appearance-none relative block w-full px-4 pr-12 py-3 border border-border placeholder-muted-foreground text-foreground rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-background/50 backdrop-blur-sm"
               placeholder="••••••••"
             />
             <button
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-2 inset-y-0 flex items-center h-full px-3 text-zinc-300 hover:text-white bg-transparent hover:bg-white/5 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="absolute right-2 inset-y-0 flex items-center h-full px-2 text-zinc-300 hover:text-white bg-transparent focus:outline-none"
             >
               {showPassword ? <EyeOff className="w-4 h-4 align-middle" /> : <Eye className="w-4 h-4 align-middle" />}
             </button>
