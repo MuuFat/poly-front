@@ -10,7 +10,7 @@ export interface Message {
 export interface Conversation {
   id: string;
   language: string;
-  lastMessage: string;
+  lastMessage: Message | null;
   messageCount: number;
   updatedAt: string;
   messages?: Message[];
