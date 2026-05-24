@@ -32,7 +32,7 @@ export const RegisterForm: React.FC = () => {
 
       const { user, token, refreshToken } = response.data;
       setAuth(user, token, refreshToken);
-      router.push('/chat');
+      router.replace('/chat');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create account');
     } finally {

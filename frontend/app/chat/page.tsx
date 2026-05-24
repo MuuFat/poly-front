@@ -50,7 +50,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push("/auth");
+      router.replace("/auth");
     }
   }, [isAuthenticated, router]);
 
@@ -200,7 +200,7 @@ export default function ChatPage() {
               <button
                 onClick={() => {
                   logout();
-                  router.push("/auth");
+                  router.replace("/auth");
                 }}
                 className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-red-500/10 text-zinc-500 hover:text-red-400 transition-colors text-sm"
               >

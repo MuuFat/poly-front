@@ -82,7 +82,7 @@ export default function ConversationsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            onClick={() => router.push(`/chat?id=${conv.id}`)}
+            onClick={() => router.replace(`/chat?id=${conv.id}`)}
             className="group relative bg-zinc-900/50 border border-white/10 rounded-2xl p-6 hover:bg-zinc-800/80 hover:border-primary/30 transition-all cursor-pointer backdrop-blur-sm"
           >
             <div className="flex items-start justify-between gap-4">
@@ -131,8 +131,8 @@ export default function ConversationsPage() {
         {/* Header */}
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-2">
-            <button 
-              onClick={() => router.push('/chat')}
+                <button 
+              onClick={() => router.replace('/chat')}
               className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-4 group"
             >
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

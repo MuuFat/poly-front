@@ -25,7 +25,7 @@ export const AuthContainer: React.FC<AuthContainerProps> = ({ initialView = 'log
     setView(newView);
     const params = new URLSearchParams(searchParams.toString());
     params.set('view', newView);
-    router.push(`/auth?${params.toString()}`);
+    router.replace(`/auth?${params.toString()}`);
   };
 
   return (
