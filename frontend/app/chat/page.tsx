@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { chatService, Message } from "@/services/chatService";
 import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -42,8 +42,11 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [language, setLanguage] = useState(() => user?.targetLanguage || "English");
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingConversation, setIsFetchingConversation] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+  const convId = searchParams?.get('id');
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -59,8 +62,41 @@ export default function ChatPage() {
 
   // Clear messages when the language changes to prevent cross-language leakage
   useEffect(() => {
-    setMessages([]);
+    // Only clear messages when not viewing a saved conversation
+    if (!convId) setMessages([]);
   }, [language]);
+
+  // Load conversation messages when an `id` query param is present
+  useEffect(() => {
+    if (!convId) return;
+    let cancelled = false;
+    const fetchConversation = async () => {
+      setIsFetchingConversation(true);
+      try {
+        const data = await chatService.getConversation(convId, { page: 1, limit: 500 });
+        const conv = data.conversation;
+        if (!conv || cancelled) return;
+
+        // Map backend messages to frontend Message shape
+        const mapped = (conv.messages || []).map((m: any, i: number) => ({
+          id: `${new Date(m.createdAt).getTime()}-${i}`,
+          role: m.role,
+          content: m.content,
+          createdAt: m.createdAt,
+        }));
+
+        setLanguage(conv.language || language);
+        setMessages(mapped);
+      } catch (err) {
+        console.error('Failed to load conversation:', err);
+      } finally {
+        if (!cancelled) setIsFetchingConversation(false);
+      }
+    };
+
+    fetchConversation();
+    return () => { cancelled = true; };
+  }, [convId]);
 
   const handleSend = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
