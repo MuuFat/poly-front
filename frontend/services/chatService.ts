@@ -16,11 +16,17 @@ export interface Conversation {
   messages?: Message[];
 }
 
+export interface SendMessageResponse {
+  reply: string;
+  conversationId: string | null;
+}
+
 export const chatService = {
-  async sendMessage(message: string, language: string) {
+  async sendMessage(message: string, language: string, conversationId?: string | null): Promise<SendMessageResponse> {
     const response = await api.post('/api/ai/chat', {
       message,
       language,
+      conversationId,
     });
     return response.data;
   },

@@ -42,7 +42,6 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [language, setLanguage] = useState(() => user?.targetLanguage || "English");
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetchingConversation, setIsFetchingConversation] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [convId, setConvId] = useState<string | null>(null);
@@ -70,17 +69,16 @@ export default function ChatPage() {
     // read convId from the URL on mount if not already set
     if (!convId) {
       try {
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(globalThis.location?.search || "");
         const id = params.get('id');
         if (id) setConvId(id);
-      } catch (e) {
-        // ignore
+      } catch (error) {
+        console.error('Failed to read conversation id from URL:', error);
       }
     }
     if (!convId) return;
     let cancelled = false;
     const fetchConversation = async () => {
-      setIsFetchingConversation(true);
       try {
         const data = await chatService.getConversation(convId, { page: 1, limit: 500 });
         const conv = data.conversation;
@@ -98,8 +96,6 @@ export default function ChatPage() {
         setMessages(mapped);
       } catch (err) {
         console.error('Failed to load conversation:', err);
-      } finally {
-        if (!cancelled) setIsFetchingConversation(false);
       }
     };
 
@@ -123,7 +119,7 @@ export default function ChatPage() {
     setIsLoading(true);
 
     try {
-      const response = await chatService.sendMessage(input, language);
+      const response = await chatService.sendMessage(input, language, convId);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
@@ -131,6 +127,11 @@ export default function ChatPage() {
         createdAt: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      if (response.conversationId && response.conversationId !== convId) {
+        setConvId(response.conversationId);
+        router.replace(`/chat?id=${response.conversationId}`);
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
     } finally {
