@@ -112,7 +112,7 @@ export const RegisterForm: React.FC = () => {
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-2 inset-y-0 flex items-center h-full px-2 text-zinc-300 hover:text-white bg-transparent focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center px-1 text-zinc-300 hover:text-white bg-transparent focus:outline-none"
             >
               {showPassword ? <EyeOff className="w-4 h-4 align-middle" /> : <Eye className="w-4 h-4 align-middle" />}
             </button>
