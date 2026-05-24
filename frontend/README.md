@@ -71,3 +71,12 @@ Protected routes need `Authorization: Bearer <accessToken>`.
 - The frontend should use the backend URL from `NEXT_PUBLIC_API_URL`.
 - Refresh tokens are currently handled by the backend flow in this project.
 - Conversation history is read from MongoDB through the backend API.
+
+## Deployment
+
+If you deploy the frontend on Vercel and the backend on Render, set these environment variables in the platform dashboards:
+
+- Vercel frontend: `NEXT_PUBLIC_API_URL=https://polylingo-2557.onrender.com`
+- Render backend: `FRONTEND_URL=https://poly-front-two.vercel.app`
+
+The frontend reads `NEXT_PUBLIC_API_URL` at build time, so this value must be set in Vercel, not Render.

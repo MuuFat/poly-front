@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 export default async function AuthPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  readonly searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const resolvedSearchParams = await searchParams;
   const viewParam = resolvedSearchParams.view;

@@ -46,6 +46,83 @@ export default function ConversationsPage() {
     c.lastMessage?.content?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  let content: React.ReactNode;
+
+  if (isLoading) {
+    content = (
+      <div className="h-64 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+        <p className="text-zinc-500 animate-pulse">Loading your history...</p>
+      </div>
+    );
+  } else if (filteredConversations.length === 0) {
+    content = (
+      <div className="bg-zinc-900/30 border border-white/5 rounded-3xl p-12 text-center space-y-6">
+        <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto">
+          <MessageSquare className="w-8 h-8 text-zinc-600" />
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold">No conversations found</h3>
+          <p className="text-zinc-500">Start a new chat to begin your language learning journey.</p>
+        </div>
+        <button 
+          onClick={() => router.push('/chat')}
+          className="px-6 py-2.5 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-medium"
+        >
+          Start Chatting
+        </button>
+      </div>
+    );
+  } else {
+    content = (
+      <div className="grid grid-cols-1 gap-4">
+        {filteredConversations.map((conv, idx) => (
+          <motion.div
+            key={conv.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.05 }}
+            onClick={() => router.push(`/chat?id=${conv.id}`)}
+            className="group relative bg-zinc-900/50 border border-white/10 rounded-2xl p-6 hover:bg-zinc-800/80 hover:border-primary/30 transition-all cursor-pointer backdrop-blur-sm"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-wider">
+                    {conv.language}
+                  </span>
+                  <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(conv.updatedAt).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <p className="text-zinc-300 line-clamp-2 leading-relaxed">
+                  {conv.lastMessage?.content || "No messages yet."}
+                </p>
+
+                <div className="flex items-center gap-6 text-[10px] text-zinc-600 font-bold uppercase tracking-widest pt-2">
+                  <span className="flex items-center gap-1.5">
+                    <MessageSquare className="w-3 h-3" />
+                    {conv.messageCount} Messages
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" />
+                    Updated {new Date(conv.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-2 rounded-xl bg-white/5 border border-white/5 group-hover:bg-primary group-hover:text-white transition-all">
+                <ArrowRight className="w-5 h-5" />
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
+
   if (!isAuthenticated) return null;
 
   return (
@@ -78,74 +155,7 @@ export default function ConversationsPage() {
         </header>
 
         {/* Content */}
-        {isLoading ? (
-          <div className="h-64 flex flex-col items-center justify-center space-y-4">
-            <Loader2 className="w-10 h-10 text-primary animate-spin" />
-            <p className="text-zinc-500 animate-pulse">Loading your history...</p>
-          </div>
-        ) : filteredConversations.length === 0 ? (
-          <div className="bg-zinc-900/30 border border-white/5 rounded-3xl p-12 text-center space-y-6">
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto">
-              <MessageSquare className="w-8 h-8 text-zinc-600" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold">No conversations found</h3>
-              <p className="text-zinc-500">Start a new chat to begin your language learning journey.</p>
-            </div>
-            <button 
-              onClick={() => router.push('/chat')}
-              className="px-6 py-2.5 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-medium"
-            >
-              Start Chatting
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4">
-            {filteredConversations.map((conv, idx) => (
-              <motion.div
-                key={conv.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                onClick={() => router.push(`/chat?id=${conv.id}`)}
-                className="group relative bg-zinc-900/50 border border-white/10 rounded-2xl p-6 hover:bg-zinc-800/80 hover:border-primary/30 transition-all cursor-pointer backdrop-blur-sm"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-wider">
-                        {conv.language}
-                      </span>
-                      <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest flex items-center gap-1.5">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(conv.updatedAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    
-                    <p className="text-zinc-300 line-clamp-2 leading-relaxed">
-                      {conv.lastMessage?.content || "No messages yet."}
-                    </p>
-                    
-                    <div className="flex items-center gap-6 text-[10px] text-zinc-600 font-bold uppercase tracking-widest pt-2">
-                      <span className="flex items-center gap-1.5">
-                        <MessageSquare className="w-3 h-3" />
-                        {conv.messageCount} Messages
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Clock className="w-3 h-3" />
-                        Updated {new Date(conv.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-2 rounded-xl bg-white/5 border border-white/5 group-hover:bg-primary group-hover:text-white transition-all">
-                    <ArrowRight className="w-5 h-5" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+        {content}
 
         <footer className="pt-12 text-center">
           <p className="text-[10px] text-zinc-700 uppercase tracking-[0.3em]">

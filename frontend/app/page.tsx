@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Languages,
   Zap,
-  Shield,
   Globe,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -115,7 +114,7 @@ export default function Home() {
             },
           ].map((feature, idx) => (
             <motion.div
-              key={idx}
+              key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -143,7 +142,7 @@ export default function Home() {
             { label: "Languages", value: "10+" },
             { label: "User Rating", value: "4.9/5" },
           ].map((stat, idx) => (
-            <div key={idx} className="space-y-2">
+            <div key={stat.label} className="space-y-2">
               <div className="text-4xl font-black text-white tracking-tighter">
                 {stat.value}
               </div>

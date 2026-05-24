@@ -39,6 +39,18 @@ FRONTEND_URL=http://localhost:3000
 
 For GitHub Actions or deployment, use GitHub Secrets or platform environment variables.
 
+If the frontend is deployed on Vercel, set `FRONTEND_URL` to the exact Vercel origin, for example:
+
+```
+FRONTEND_URL=https://poly-front-two.vercel.app
+```
+
+If the frontend API client is built on Vercel, set `NEXT_PUBLIC_API_URL` in the Vercel project settings to the Render backend URL:
+
+```
+NEXT_PUBLIC_API_URL=https://polylingo-2557.onrender.com
+```
+
 ---
 
 ## API summary
