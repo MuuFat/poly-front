@@ -118,7 +118,7 @@ export const LoginForm: React.FC = () => {
           </div>
 
           <div className="font-medium">
-            <button type="button" className="text-primary hover:text-primary/80 transition-colors">
+            <button type="button" onClick={() => { globalThis.location.href = '/auth/forgot'; }} className="text-primary hover:text-primary/80 transition-colors">
               Forgot your password?
             </button>
           </div>

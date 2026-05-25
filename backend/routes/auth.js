@@ -5,6 +5,8 @@ const Session = require('../models/Session');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { hashToken, isValidEmail, isNonEmptyString } = require('../utils/token');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const https = require('node:https');
 const querystring = require('node:querystring');
 const { hashToken, isValidEmail, isNonEmptyString } = require('../utils/token');
@@ -203,6 +205,77 @@ async function persistSession({ userId, refreshToken, req }) {
                 return res.json({ user });
             } catch (err) {
                 return res.status(500).json({ error: err.message });
+            }
+        });
+
+        // Forgot password - generates a reset token and (optionally) sends email.
+        router.post('/forgot', async (req, res) => {
+            try {
+                const { email } = req.body;
+                if (!isValidEmail(email)) return res.status(400).json({ message: 'Invalid email' });
+
+                const user = await User.findOne({ email });
+                if (!user) return res.status(200).json({ message: 'If an account exists, a reset link will be sent' });
+
+                const token = crypto.randomBytes(20).toString('hex');
+                const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+                user.resetPasswordToken = tokenHash;
+                user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+                await user.save();
+
+                const frontend = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
+                const resetUrl = `${frontend}/auth/reset?token=${token}`;
+
+                // If SMTP configured, send an email, otherwise return a preview token for dev
+                if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+                    const transporter = nodemailer.createTransport({
+                        host: process.env.SMTP_HOST,
+                        port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
+                        secure: process.env.SMTP_SECURE === 'true',
+                        auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined,
+                    });
+
+                    await transporter.sendMail({
+                        from: process.env.SMTP_FROM || 'no-reply@example.com',
+                        to: user.email,
+                        subject: 'Password reset',
+                        text: `Reset your password: ${resetUrl}`,
+                        html: `<p>Reset your password by visiting <a href="${resetUrl}">${resetUrl}</a></p>`,
+                    });
+
+                    return res.json({ message: 'If an account exists, a reset link will be sent' });
+                }
+
+                // Dev-mode: return token so students can test flow without email
+                return res.json({ message: 'Reset token (dev preview)', previewToken: token, resetUrl });
+            } catch (err) {
+                return res.status(500).json({ message: err.message || 'Failed to create reset token' });
+            }
+        });
+
+        // Reset password - accept token and new password
+        router.post('/reset', async (req, res) => {
+            try {
+                const { token, password } = req.body;
+                if (!token || !isNonEmptyString(password, 6, 128)) return res.status(400).json({ message: 'Invalid input' });
+
+                const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+                const user = await User.findOne({ resetPasswordToken: tokenHash, resetPasswordExpires: { $gt: new Date() } });
+                if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
+
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(password, salt);
+                user.resetPasswordToken = undefined;
+                user.resetPasswordExpires = undefined;
+                await user.save();
+
+                // issue tokens and sign in
+                const tokens = createAuthTokens(user);
+                await persistSession({ userId: user._id, refreshToken: tokens.refreshToken, req });
+
+                return res.json({ message: 'Password reset successful', ...buildAuthResponse(user, tokens) });
+            } catch (err) {
+                return res.status(500).json({ message: err.message || 'Failed to reset password' });
             }
         });
 
