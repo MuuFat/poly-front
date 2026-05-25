@@ -1,8 +1,9 @@
 # Polylingo
 
-Polylingo is an AI language learning app with a Node.js/Express backend, MongoDB, and a frontend connected to the backend API.
+Polylingo is an AI language tutor app with a Node.js/Express backend, MongoDB, and a frontend connected to the backend API.
 
 Current status:
+
 - Frontend and backend are connected.
 - Authentication uses JWT access tokens and refresh tokens.
 - Chat messages are saved to MongoDB.
@@ -17,7 +18,7 @@ Current status:
 - `Session` model for refresh token session tracking.
 - `Conversation` model for saved chat history.
 - Auth routes for register, login, refresh, logout, and me.
-- Chat route that sends prompts to OpenAI and stores messages.
+- Chat route that sends tutor prompts to OpenAI and stores messages.
 - Conversation routes for listing and reading history.
 
 ---
@@ -28,7 +29,7 @@ For local development, use `backend/.env` on your machine.
 
 Required values:
 
-```
+```env
 MONGO_URI=
 OPENAI_API_KEY=
 PORT=5000
@@ -41,13 +42,13 @@ For GitHub Actions or deployment, use GitHub Secrets or platform environment var
 
 If the frontend is deployed on Vercel, set `FRONTEND_URL` to the exact Vercel origin, for example:
 
-```
+```env
 FRONTEND_URL=https://poly-front-two.vercel.app
 ```
 
 If the frontend API client is built on Vercel, set `NEXT_PUBLIC_API_URL` in the Vercel project settings to the Render backend URL:
 
-```
+```env
 NEXT_PUBLIC_API_URL=https://polylingo-2557.onrender.com
 ```
 
@@ -58,6 +59,7 @@ NEXT_PUBLIC_API_URL=https://polylingo-2557.onrender.com
 Base URL for local development: `http://localhost:5000`
 
 Auth:
+
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `POST /api/auth/refresh`
@@ -65,6 +67,7 @@ Auth:
 - `GET /api/auth/me`
 
 Data:
+
 - `GET /api/users`
 - `POST /api/ai/chat`
 - `GET /api/conversations`
@@ -77,7 +80,7 @@ Protected routes need `Authorization: Bearer <accessToken>`.
 ## Database notes
 
 - Collections used: `users`, `sessions`, `conversations`
-- Chat messages are appended to the `conversations` collection every time a user sends a message.
+- Chat messages are appended to the `conversations` collection every time a user sends a tutor request.
 - `sessions` has a TTL index for refresh token expiry.
 - `conversations` has an index for efficient lookup by user and language.
 
@@ -111,6 +114,7 @@ npm test
 ## Handoff summary
 
 If you are handing this project to another developer, tell them:
+
 - The backend is connected to MongoDB.
 - Messages are saved automatically.
 - The frontend only needs the endpoints above and the access token flow.

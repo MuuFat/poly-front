@@ -28,7 +28,7 @@ export default function ChatPage() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [language, setLanguage] = useState(() => user?.targetLanguage || "English");
+  const [language, setLanguage] = useState(() => user?.targetLanguage || "Polish");
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -38,7 +38,7 @@ export default function ChatPage() {
     setConvId(null);
     setMessages([]);
     setInput("");
-    setLanguage(user?.targetLanguage || "English");
+    setLanguage(user?.targetLanguage || "Polish");
     router.replace("/chat");
   };
 
@@ -173,7 +173,7 @@ export default function ChatPage() {
                 </button>
                 <div className="pt-4 pb-2">
                   <span className="px-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                    Current Target Language
+                    Current Learning Language
                   </span>
                 </div>
                 <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-300">
@@ -225,13 +225,13 @@ export default function ChatPage() {
             </button>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <h2 className="font-semibold">{language} AI Assistant</h2>
+              <h2 className="font-semibold">{language} Language Tutor</h2>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-zinc-400">
               <Sparkles className="w-3 h-3 text-primary" />
-              GPT-4o Powered
+              OpenAI Powered
             </div>
           </div>
         </header>
@@ -250,9 +250,9 @@ export default function ChatPage() {
                   Practice {language} with a tutor
                 </h3>
                 <p className="text-zinc-500 leading-relaxed">
-                  Ask for corrections, examples, translations, or short
-                  practice tasks. This chat is tuned for language learning,
-                  not general-purpose conversation.
+                  Ask for corrections, examples, translations, vocabulary,
+                  grammar help, or short practice tasks. This space is for
+                  language learning only.
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-2 w-full text-left">
@@ -364,7 +364,7 @@ export default function ChatPage() {
             </button>
           </form>
           <p className="text-center text-[10px] text-zinc-600 mt-4 uppercase tracking-[0.2em]">
-            PolyLingo is a language tutor. It can still make mistakes.
+            PolyLingo is a language tutor only. It can still make mistakes.
           </p>
         </div>
       </main>

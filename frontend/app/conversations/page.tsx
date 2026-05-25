@@ -64,7 +64,7 @@ export default function ConversationsPage() {
         </div>
         <div className="space-y-2">
           <h3 className="text-xl font-semibold">No conversations found</h3>
-          <p className="text-zinc-500">Start a new chat to begin your language learning journey.</p>
+          <p className="text-zinc-500">Start a new tutor session to begin your language practice.</p>
         </div>
         <button 
           onClick={() => router.push('/chat')}
@@ -173,7 +173,7 @@ export default function ConversationsPage() {
 
         <footer className="pt-12 text-center">
           <p className="text-[10px] text-zinc-700 uppercase tracking-[0.3em]">
-            PolyLingo &copy; 2026 &bull; Advanced AI Language Tutor
+            PolyLingo &copy; 2026 &bull; AI Language Tutor
           </p>
         </footer>
       </div>

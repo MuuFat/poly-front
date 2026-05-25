@@ -40,7 +40,7 @@ export default function Home() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-primary backdrop-blur-sm"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Next-Gen AI Language Learning</span>
+            <span>AI Language Tutor</span>
           </motion.div>
 
           <motion.h1
@@ -49,7 +49,7 @@ export default function Home() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-8xl font-black tracking-tighter leading-[1.1]"
           >
-            Master any language <br />
+            Learn Polish or any language <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-500 to-blue-500">
               with PolyLingo AI
             </span>
@@ -61,9 +61,9 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="max-w-2xl mx-auto text-xl text-zinc-400 leading-relaxed"
           >
-            Practice speaking, writing and understanding any language with your
-            personal AI tutor. Natural conversations, instant feedback and
-            personalized progress.
+            Practice speaking, writing, and understanding Polish or any other
+            language with your personal AI tutor. Natural conversations,
+            instant feedback, and personalized progress.
           </motion.p>
 
           <motion.div
@@ -96,21 +96,21 @@ export default function Home() {
           {[
             {
               icon: Languages,
-              title: "10+ Languages",
+              title: "Language Practice",
               description:
-                "Learn and practice English, Spanish, French, Japanese and many more with native level AI.",
+                "Learn Polish or switch to English, Spanish, French, Japanese, and more with native-level tutoring.",
             },
             {
               icon: Zap,
-              title: "Instant Feedback",
+              title: "Instant Corrections",
               description:
-                "Get real time corrections and suggestions to improve your grammar and vocabulary.",
+                "Get real-time corrections and suggestions to improve your grammar, vocabulary, and sentence structure.",
             },
             {
               icon: Globe,
-              title: "Cultural Context",
+              title: "Tutor Guidance",
               description:
-                "Understand nuances and cultural background as you learn through natural conversation.",
+                "Understand nuances, examples, and learning hints as you practice through natural conversation.",
             },
           ].map((feature, idx) => (
             <motion.div
@@ -137,11 +137,11 @@ export default function Home() {
       <section className="py-24 border-t border-white/5 bg-zinc-900/20">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           {[
-            { label: "Active Users", value: "50k+" },
-            { label: "Messages Sent", value: "2M+" },
-            { label: "Languages", value: "10+" },
-            { label: "User Rating", value: "4.9/5" },
-          ].map((stat, idx) => (
+            { label: "Mode", value: "Tutor-first" },
+            { label: "Feedback", value: "Real-time" },
+            { label: "Scope", value: "Any language" },
+            { label: "Focus", value: "Learning only" },
+          ].map((stat) => (
             <div key={stat.label} className="space-y-2">
               <div className="text-4xl font-black text-white tracking-tighter">
                 {stat.value}
@@ -163,7 +163,7 @@ export default function Home() {
           <span className="font-bold text-xl tracking-tight">PolyLingo</span>
         </div>
         <p className="text-zinc-600 text-sm">
-          &copy; 2026 PolyLingo AI. Built for the future of education.
+          &copy; 2026 PolyLingo AI. Built as a language tutor.
         </p>
       </footer>
     </div>

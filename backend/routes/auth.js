@@ -43,7 +43,12 @@ function buildAuthResponse(user, tokens) {
     return {
         token: tokens.accessToken,
         refreshToken: tokens.refreshToken,
-        user: { id: user._id, username: user.username, email: user.email },
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            targetLanguage: user.targetLanguage || 'Polish',
+        },
     };
 }
 

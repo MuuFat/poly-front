@@ -45,7 +45,12 @@ describe('Auth routes', () => {
 
         expect(response.status).toBe(201);
         expect(response.body.message).toBe('User secured and created!');
-        expect(response.body.user).toEqual({ id: 'user-id-1', username: 'Fatih', email: 'fatih@example.com' });
+        expect(response.body.user).toEqual({
+            id: 'user-id-1',
+            username: 'Fatih',
+            email: 'fatih@example.com',
+            targetLanguage: 'Polish',
+        });
         expect(typeof response.body.token).toBe('string');
         expect(typeof response.body.refreshToken).toBe('string');
         expect(Session.create).toHaveBeenCalledWith(
@@ -73,6 +78,7 @@ describe('Auth routes', () => {
             username: 'Fatih',
             email: 'fatih@example.com',
             password: 'hashed-password',
+            targetLanguage: 'Polish',
         });
         Session.create.mockResolvedValue({});
 
@@ -84,7 +90,12 @@ describe('Auth routes', () => {
 
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Login successful!');
-        expect(response.body.user).toEqual({ id: 'user-id-2', username: 'Fatih', email: 'fatih@example.com' });
+        expect(response.body.user).toEqual({
+            id: 'user-id-2',
+            username: 'Fatih',
+            email: 'fatih@example.com',
+            targetLanguage: 'Polish',
+        });
         expect(typeof response.body.token).toBe('string');
         expect(typeof response.body.refreshToken).toBe('string');
     });
@@ -95,6 +106,7 @@ describe('Auth routes', () => {
             username: 'Fatih',
             email: 'fatih@example.com',
             password: 'hashed-password',
+            targetLanguage: 'Polish',
         });
 
         jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
@@ -129,7 +141,12 @@ describe('Auth routes', () => {
 
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Session refreshed');
-        expect(response.body.user).toEqual({ id: 'user-id-2', username: 'Fatih', email: 'fatih@example.com' });
+        expect(response.body.user).toEqual({
+            id: 'user-id-2',
+            username: 'Fatih',
+            email: 'fatih@example.com',
+            targetLanguage: 'Polish',
+        });
         expect(typeof response.body.token).toBe('string');
         expect(typeof response.body.refreshToken).toBe('string');
     });
