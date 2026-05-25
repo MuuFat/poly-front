@@ -18,6 +18,7 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/conversations', require('./routes/conversations'));
+app.use('/api/debug', require('./routes/debug'));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Backend is running perfectly!' });
