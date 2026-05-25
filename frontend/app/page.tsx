@@ -61,8 +61,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="max-w-2xl mx-auto text-xl text-zinc-400 leading-relaxed"
           >
-            Practice speaking, writing, and understanding any language with your
-            personal AI tutor. Natural conversations, instant feedback, and
+            Practice speaking, writing and understanding any language with your
+            personal AI tutor. Natural conversations, instant feedback and
             personalized progress.
           </motion.p>
 
@@ -98,13 +98,13 @@ export default function Home() {
               icon: Languages,
               title: "10+ Languages",
               description:
-                "Learn and practice English, Spanish, French, Japanese, and many more with native-level AI.",
+                "Learn and practice English, Spanish, French, Japanese and many more with native level AI.",
             },
             {
               icon: Zap,
               title: "Instant Feedback",
               description:
-                "Get real-time corrections and suggestions to improve your grammar and vocabulary.",
+                "Get real time corrections and suggestions to improve your grammar and vocabulary.",
             },
             {
               icon: Globe,
