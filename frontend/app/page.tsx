@@ -49,7 +49,7 @@ export default function Home() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-8xl font-black tracking-tighter leading-[1.1]"
           >
-            Learn Polish or any language <br />
+            Learn any language <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-500 to-blue-500">
               with PolyLingo AI
             </span>
@@ -61,9 +61,9 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="max-w-2xl mx-auto text-xl text-zinc-400 leading-relaxed"
           >
-            Practice speaking, writing, and understanding Polish or any other
+            Practice speaking, writing and understanding any
             language with your personal AI tutor. Natural conversations,
-            instant feedback, and personalized progress.
+            instant feedback and personalized progress.
           </motion.p>
 
           <motion.div
@@ -98,19 +98,19 @@ export default function Home() {
               icon: Languages,
               title: "Language Practice",
               description:
-                "Learn Polish or switch to English, Spanish, French, Japanese, and more with native-level tutoring.",
+                "Learn English or switch to Polish, Spanish, French, Japanese and more with native level tutoring.",
             },
             {
               icon: Zap,
               title: "Instant Corrections",
               description:
-                "Get real-time corrections and suggestions to improve your grammar, vocabulary, and sentence structure.",
+                "Get real time corrections and suggestions to improve your grammar, vocabulary and sentence structure.",
             },
             {
               icon: Globe,
               title: "Tutor Guidance",
               description:
-                "Understand nuances, examples, and learning hints as you practice through natural conversation.",
+                "Understand nuances, examples and learning hints as you practice through natural conversation.",
             },
           ].map((feature, idx) => (
             <motion.div
@@ -137,8 +137,8 @@ export default function Home() {
       <section className="py-24 border-t border-white/5 bg-zinc-900/20">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           {[
-            { label: "Mode", value: "Tutor-first" },
-            { label: "Feedback", value: "Real-time" },
+            { label: "Mode", value: "Tutor first" },
+            { label: "Feedback", value: "Real time" },
             { label: "Scope", value: "Any language" },
             { label: "Focus", value: "Learning only" },
           ].map((stat) => (
