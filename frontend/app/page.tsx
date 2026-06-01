@@ -189,6 +189,10 @@ export default function Home() {
         <p className="text-zinc-600 text-sm">
           &copy; 2026 PolyLingo AI. Built as a language tutor.
         </p>
+        <div className="mt-3 space-x-4">
+          <a href="/terms" className="text-zinc-400 hover:text-white underline">Terms</a>
+          <a href="/privacy" className="text-zinc-400 hover:text-white underline">Privacy</a>
+        </div>
       </footer>
     </div>
   );
