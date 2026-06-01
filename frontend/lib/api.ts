@@ -72,10 +72,13 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = useAuthStore.getState().refreshToken;
+      const authState = useAuthStore.getState();
+      const refreshToken = authState.refreshToken;
 
       if (!refreshToken) {
-        useAuthStore.getState().logout();
+        if (authState.hasHydrated) {
+          authState.logout();
+        }
         isRefreshing = false;
         throw error;
       }
@@ -94,7 +97,9 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        useAuthStore.getState().logout();
+        if (useAuthStore.getState().hasHydrated) {
+          useAuthStore.getState().logout();
+        }
         throw refreshError;
       } finally {
         isRefreshing = false;
