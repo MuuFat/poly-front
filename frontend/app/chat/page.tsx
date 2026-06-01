@@ -37,7 +37,7 @@ const languageOptions = [
 ];
 
 export default function ChatPage() {
-  const { user, logout, isAuthenticated } = useAuthStore();
+  const { user, logout, isAuthenticated, hasHydrated } = useAuthStore();
   const router = useRouter();
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -59,10 +59,10 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (hasHydrated && !isAuthenticated) {
       router.replace("/auth");
     }
-  }, [isAuthenticated, router]);
+  }, [hasHydrated, isAuthenticated, router]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -151,7 +151,7 @@ export default function ChatPage() {
     }
   };
 
-  if (!isAuthenticated) return null;
+  if (!hasHydrated || !isAuthenticated) return null;
 
   return (
     <div className="flex h-screen bg-[#050505] text-zinc-100 overflow-hidden font-sans">
