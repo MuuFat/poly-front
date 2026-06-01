@@ -47,4 +47,14 @@ export const chatService = {
     const response = await api.get(`/api/conversations/${id}`, { params });
     return response.data;
   },
+
+  async deleteConversation(id: string) {
+    const response = await api.delete(`/api/conversations/${id}`);
+    return response.data;
+  },
+
+  async deleteAllConversations() {
+    const response = await api.delete('/api/conversations', { params: { all: true } });
+    return response.data;
+  },
 };
