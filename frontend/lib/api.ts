@@ -74,9 +74,10 @@ api.interceptors.response.use(
 
       const authState = useAuthStore.getState();
       const refreshToken = authState.refreshToken;
+      const hasHydrated = useAuthStore.persist.hasHydrated();
 
       if (!refreshToken) {
-        if (authState.hasHydrated) {
+        if (hasHydrated) {
           authState.logout();
         }
         isRefreshing = false;
@@ -97,7 +98,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        if (useAuthStore.getState().hasHydrated) {
+        if (useAuthStore.persist.hasHydrated()) {
           useAuthStore.getState().logout();
         }
         throw refreshError;
