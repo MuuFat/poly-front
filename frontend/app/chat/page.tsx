@@ -37,8 +37,9 @@ const languageOptions = [
 ];
 
 export default function ChatPage() {
-  const { user, logout, isAuthenticated, hasHydrated } = useAuthStore();
+  const { user, logout, isAuthenticated } = useAuthStore();
   const router = useRouter();
+  const [hasHydrated, setHasHydrated] = useState(useAuthStore.persist.hasHydrated());
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -48,6 +49,18 @@ export default function ChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [convId, setConvId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+
+    if (useAuthStore.persist.hasHydrated()) {
+      setHasHydrated(true);
+    }
+
+    return unsubscribe;
+  }, []);
 
   const startNewConversation = () => {
     setConvId(null);
@@ -151,7 +164,18 @@ export default function ChatPage() {
     }
   };
 
-  if (!hasHydrated || !isAuthenticated) return null;
+  if (!hasHydrated) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#050505] text-zinc-100">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-zinc-500">Loading chat...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) return null;
 
   return (
     <div className="flex h-screen bg-[#050505] text-zinc-100 overflow-hidden font-sans">
