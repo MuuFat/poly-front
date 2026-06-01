@@ -62,6 +62,7 @@ export default function ConversationsPage() {
     try {
       await chatService.deleteConversation(id);
       setConversations((prev) => prev.filter((c) => c.id !== id));
+      alert('Conversation deleted');
     } catch (err) {
       console.error('Failed to delete conversation', err);
       alert('Failed to delete conversation');
