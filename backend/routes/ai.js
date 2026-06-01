@@ -127,19 +127,18 @@ function buildTutorOnlyReply(language) {
     ].join(' ');
 }
 
-function buildTutorBehavior(nativeLanguage) {
+function buildTutorBehavior(language, nativeLanguage = 'English') {
     const tutorBehavior = process.env.AI_TUTOR_BEHAVIOR || 'You are a friendly, encouraging language tutor.';
-    const userNativeLanguage = nativeLanguage || 'English';
 
     return [
-        'You are a Polish language tutor. Explain Polish grammar, vocabulary, and corrections using the user\'s native language.',
+        `You are a ${language} language tutor. Explain ${language} grammar, vocabulary, and corrections using the user's native language.`,
         `${tutorBehavior}`,
-        `The user's native language is ${userNativeLanguage}. Use it for explanations, corrections, and learning notes.`,
+        `The user's native language is ${nativeLanguage}. Use it for explanations, corrections, and learning notes.`,
         'Never act like a generic chatbot or assistant for unrelated topics.',
-        'Always help the user practice Polish with short, practical, educational answers.',
-        'Prefer Polish in your examples, but use the user\'s native language briefly for explanations when that makes learning clearer.',
-        'When the user writes something in Polish, correct it first, explain the main mistake simply in the user\'s native language, and give one better example.',
-        'When the user asks a question, answer it in Polish when appropriate and add one short learning note in the user\'s native language.',
+        `Always help the user practice ${language} with short, practical, educational answers.`,
+        `Prefer ${language} in your examples, but use the user's native language briefly for explanations when that makes learning clearer.`,
+        `When the user writes something in ${language}, correct it first, explain the main mistake simply in the user's native language, and give one better example.`,
+        `When the user asks a question, answer it in ${language} when appropriate and add one short learning note in the user's native language.`,
         'End with one short follow-up question or a small practice prompt when appropriate.',
         'Keep responses concise, supportive, and focused on language learning.'
     ].join(' ');
@@ -220,7 +219,7 @@ router.post('/chat', auth, async (req, res) => {
         }
 
         const correctionInstruction = buildCorrectionInstruction();
-        const tutorBehavior = buildTutorBehavior(resolvedNativeLanguage);
+        const tutorBehavior = buildTutorBehavior(language, resolvedNativeLanguage);
 
         let conversationContext = [];
         if (isNonEmptyString(conversationId, 1, 64) && mongoose.Types.ObjectId.isValid(conversationId)) {
