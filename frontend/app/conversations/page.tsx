@@ -65,7 +65,11 @@ export default function ConversationsPage() {
       alert('Conversation deleted');
     } catch (err) {
       console.error('Failed to delete conversation', err);
-      alert('Failed to delete conversation');
+      // Show response details when available to aid debugging
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const e: any = err;
+      const details = e?.response?.data ? JSON.stringify(e.response.data) : e?.message || String(e);
+      alert('Failed to delete conversation: ' + details);
     }
   };
 
@@ -219,7 +223,10 @@ export default function ConversationsPage() {
                   setConversations([]);
                 } catch (err) {
                   console.error('Failed to delete all conversations', err);
-                  alert('Failed to delete conversations');
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  const e: any = err;
+                  const details = e?.response?.data ? JSON.stringify(e.response.data) : e?.message || String(e);
+                  alert('Failed to delete conversations: ' + details);
                 } finally {
                   setIsDeletingAll(false);
                 }
