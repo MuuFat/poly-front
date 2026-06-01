@@ -17,9 +17,22 @@ export default function ConversationsPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [hasHydrated, setHasHydrated] = useState(useAuthStore.persist.hasHydrated());
   
-  const { isAuthenticated, hasHydrated } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+
+    if (useAuthStore.persist.hasHydrated()) {
+      setHasHydrated(true);
+    }
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (hasHydrated && !isAuthenticated) {
@@ -128,7 +141,18 @@ export default function ConversationsPage() {
     );
   }
 
-  if (!hasHydrated || !isAuthenticated) return null;
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#050505] text-zinc-100">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-zinc-500">Loading history...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans p-6 sm:p-12">
