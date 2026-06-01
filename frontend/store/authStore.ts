@@ -6,6 +6,7 @@ interface User {
   username: string;
   email: string;
   targetLanguage?: string;
+  nativeLanguage?: string;
 }
 
 interface AuthState {
