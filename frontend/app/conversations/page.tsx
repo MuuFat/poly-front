@@ -17,17 +17,17 @@ export default function ConversationsPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [hasHydrated, setHasHydrated] = useState(useAuthStore.persist.hasHydrated());
+  const [hasHydrated, setHasHydrated] = useState(() => useAuthStore.persist?.hasHydrated?.() ?? false);
   
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+    const unsubscribe = useAuthStore.persist?.onFinishHydration?.(() => {
       setHasHydrated(true);
     });
 
-    if (useAuthStore.persist.hasHydrated()) {
+    if (useAuthStore.persist?.hasHydrated?.()) {
       setHasHydrated(true);
     }
 
