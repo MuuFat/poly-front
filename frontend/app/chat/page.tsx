@@ -39,7 +39,7 @@ const languageOptions = [
 export default function ChatPage() {
   const { user, logout, isAuthenticated } = useAuthStore();
   const router = useRouter();
-  const [hasHydrated, setHasHydrated] = useState(useAuthStore.persist.hasHydrated());
+  const [hasHydrated, setHasHydrated] = useState(() => useAuthStore.persist?.hasHydrated?.() ?? false);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -51,11 +51,11 @@ export default function ChatPage() {
   const [convId, setConvId] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+    const unsubscribe = useAuthStore.persist?.onFinishHydration?.(() => {
       setHasHydrated(true);
     });
 
-    if (useAuthStore.persist.hasHydrated()) {
+    if (useAuthStore.persist?.hasHydrated?.()) {
       setHasHydrated(true);
     }
 
