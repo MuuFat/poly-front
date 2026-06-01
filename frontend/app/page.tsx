@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -13,8 +13,21 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
 export default function Home() {
-  const { isAuthenticated, hasHydrated } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const router = useRouter();
+  const [hasHydrated, setHasHydrated] = useState(useAuthStore.persist.hasHydrated());
+
+  useEffect(() => {
+    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+
+    if (useAuthStore.persist.hasHydrated()) {
+      setHasHydrated(true);
+    }
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (hasHydrated && isAuthenticated) {
@@ -22,7 +35,16 @@ export default function Home() {
     }
   }, [hasHydrated, isAuthenticated, router]);
 
-  if (!hasHydrated) return null;
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#050505] text-zinc-100">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-zinc-500">Loading app...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isAuthenticated) return null;
 
