@@ -199,10 +199,10 @@ export default function ChatPage() {
                   id="learning-language"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-200 outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-3 rounded-xl bg-zinc-900/95 border border-white/10 text-sm text-zinc-100 outline-none focus:ring-2 focus:ring-primary/40"
                 >
                   {languageOptions.map((option) => (
-                    <option key={option} value={option}>
+                    <option key={option} value={option} className="bg-zinc-900 text-zinc-100">
                       {option}
                     </option>
                   ))}
@@ -214,10 +214,10 @@ export default function ChatPage() {
                   id="native-language"
                   value={nativeLanguage}
                   onChange={(e) => setNativeLanguage(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-200 outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-3 rounded-xl bg-zinc-900/95 border border-white/10 text-sm text-zinc-100 outline-none focus:ring-2 focus:ring-primary/40"
                 >
                   {languageOptions.map((option) => (
-                    <option key={option} value={option}>
+                    <option key={option} value={option} className="bg-zinc-900 text-zinc-100">
                       {option}
                     </option>
                   ))}
