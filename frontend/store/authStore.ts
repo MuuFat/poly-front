@@ -14,6 +14,7 @@ interface AuthState {
   token: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  hasHydrated: boolean;
   setAuth: (user: User, token: string, refreshToken: string) => void;
   updateTokens: (token: string, refreshToken: string) => void;
   logout: () => void;
@@ -26,6 +27,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       refreshToken: null,
       isAuthenticated: false,
+      hasHydrated: false,
       setAuth: (user, token, refreshToken) =>
         set({ user, token, refreshToken, isAuthenticated: true }),
       updateTokens: (token, refreshToken) =>
@@ -35,6 +37,15 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'polylingo-auth',
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        refreshToken: state.refreshToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
+      onRehydrateStorage: () => (_state, _error) => {
+        set({ hasHydrated: true });
+      },
     }
   )
 );
