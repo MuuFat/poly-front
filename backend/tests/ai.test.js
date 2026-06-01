@@ -88,7 +88,7 @@ describe('AI route', () => {
         const response = await request(app)
             .post('/api/ai/chat')
             .set('Authorization', `Bearer ${token}`)
-            .send({ message: 'Please correct my sentence: I am student.', language: 'Polish' });
+            .send({ message: 'Please correct my sentence: I am student.', language: 'Polish', nativeLanguage: 'Russian' });
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ reply: 'Cześć! Jak się masz?', conversationId: 'conversation-id-1' });
@@ -97,6 +97,8 @@ describe('AI route', () => {
                 model: 'gpt-4o-mini',
             })
         );
+        expect(__createMock.mock.calls[0][0].messages[0].content).toContain('You are a Polish language tutor. Explain Polish grammar, vocabulary, and corrections using the user\'s native language.');
+        expect(__createMock.mock.calls[0][0].messages[0].content).toContain('User native language: Russian.');
         expect(Conversation.create).toHaveBeenCalledWith(
             expect.objectContaining({
                 user: 'user-id-3',
