@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, MessageSquare, Calendar, Clock, ArrowRight, Loader2, Search, Plus } from 'lucide-react';
+import { ChevronLeft, MessageSquare, Calendar, Clock, ArrowRight, Loader2, Search, Plus, Trash2 } from 'lucide-react';
 import { chatService, Conversation } from '@/services/chatService';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
@@ -54,6 +54,20 @@ export default function ConversationsPage() {
     fetchConversations();
   }, [hasHydrated, isAuthenticated, router]);
 
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
+
+  const handleDelete = async (id: string) => {
+    const ok = confirm('Delete this conversation? This action cannot be undone.');
+    if (!ok) return;
+    try {
+      await chatService.deleteConversation(id);
+      setConversations((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error('Failed to delete conversation', err);
+      alert('Failed to delete conversation');
+    }
+  };
+
   const filteredConversations = conversations.filter(c => 
     c.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     c.language.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,8 +110,7 @@ export default function ConversationsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            onClick={() => router.replace(`/chat?id=${conv.id}`)}
-            className="group relative bg-zinc-900/50 border border-white/10 rounded-2xl p-6 hover:bg-zinc-800/80 hover:border-primary/30 transition-all cursor-pointer backdrop-blur-sm"
+            className="group relative bg-zinc-900/50 border border-white/10 rounded-2xl p-6 hover:bg-zinc-800/80 hover:border-primary/30 transition-all backdrop-blur-sm"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 space-y-3">
@@ -130,9 +143,25 @@ export default function ConversationsPage() {
                   {new Date(conv.updatedAt).toLocaleDateString()}
                 </span>
               </div>
+              <div className="flex flex-col items-end gap-2">
+                <button
+                  onClick={() => router.replace(`/chat?id=${conv.id}`)}
+                  aria-label={`Open conversation ${conv.title || 'conversation'}`}
+                  className="p-2 rounded-xl bg-white/5 border border-white/5 group-hover:bg-primary group-hover:text-white transition-all"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
 
-              <div className="p-2 rounded-xl bg-white/5 border border-white/5 group-hover:bg-primary group-hover:text-white transition-all">
-                <ArrowRight className="w-5 h-5" />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(conv.id);
+                  }}
+                  aria-label={`Delete conversation ${conv.title || 'conversation'}`}
+                  className="p-2 rounded-xl bg-red-600/10 border border-red-600/20 text-red-400 hover:bg-red-600/20 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </motion.div>
@@ -178,6 +207,25 @@ export default function ConversationsPage() {
             >
               <Plus className="w-4 h-4" />
               New Conversation
+            </button>
+            <button
+              onClick={async () => {
+                const ok = confirm('Delete ALL conversations? This cannot be undone.');
+                if (!ok) return;
+                try {
+                  setIsDeletingAll(true);
+                  await chatService.deleteAllConversations();
+                  setConversations([]);
+                } catch (err) {
+                  console.error('Failed to delete all conversations', err);
+                  alert('Failed to delete conversations');
+                } finally {
+                  setIsDeletingAll(false);
+                }
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-700 text-white shadow-lg shadow-red-700/20 hover:scale-105 transition-all font-medium"
+            >
+              {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete All'}
             </button>
             <div className="relative w-full sm:w-72">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
