@@ -23,11 +23,17 @@ export interface SendMessageResponse {
 }
 
 export const chatService = {
-  async sendMessage(message: string, language: string, conversationId?: string | null): Promise<SendMessageResponse> {
+  async sendMessage(
+    message: string,
+    language: string,
+    conversationId?: string | null,
+    nativeLanguage?: string
+  ): Promise<SendMessageResponse> {
     const response = await api.post('/api/ai/chat', {
       message,
       language,
       conversationId,
+      nativeLanguage,
     });
     return response.data;
   },
