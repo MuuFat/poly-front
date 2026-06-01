@@ -62,9 +62,10 @@ router.get('/:id', auth, async (req, res) => {
 // DELETE /api/conversations/:id  -> delete a single conversation
 router.delete('/:id', auth, async (req, res) => {
     try {
+        console.log('[conversations] delete request:', { user: req.user.id, id: req.params.id });
         const conv = await Conversation.findOneAndDelete({ _id: req.params.id, user: req.user.id });
         if (!conv) return res.status(404).json({ message: 'Conversation not found' });
-        res.json({ message: 'Deleted' });
+        res.json({ message: 'Deleted', id: req.params.id });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -74,6 +75,7 @@ router.delete('/:id', auth, async (req, res) => {
 router.delete('/', auth, async (req, res) => {
     try {
         const { all } = req.query;
+        console.log('[conversations] delete all request:', { user: req.user.id, query: req.query });
         if (all !== 'true') return res.status(400).json({ message: 'Specify ?all=true to delete all conversations' });
 
         const result = await Conversation.deleteMany({ user: req.user.id });
