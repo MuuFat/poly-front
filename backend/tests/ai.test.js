@@ -111,4 +111,25 @@ describe('AI route', () => {
             })
         );
     });
+
+    test('POST /api/ai/chat switches the tutor prompt to the selected learning language', async () => {
+        __createMock.mockResolvedValue({
+            choices: [{ message: { content: 'Hello! How can I help you learn Spanish?' } }],
+        });
+
+        Conversation.findOne.mockResolvedValue(null);
+        Conversation.create.mockResolvedValue({ _id: 'conversation-id-4' });
+
+        const token = jwt.sign({ user: { id: 'user-id-4' }, type: 'access' }, process.env.JWT_SECRET);
+
+        const response = await request(app)
+            .post('/api/ai/chat')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ message: 'How do I say hello?', language: 'Spanish', nativeLanguage: 'English' });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({ reply: 'Hello! How can I help you learn Spanish?', conversationId: 'conversation-id-4' });
+        expect(__createMock.mock.calls[0][0].messages[0].content).toContain('You are a Spanish language tutor. Explain Spanish grammar, vocabulary, and corrections using the user\'s native language.');
+        expect(__createMock.mock.calls[0][0].messages[0].content).toContain('User native language: English.');
+    });
 });
