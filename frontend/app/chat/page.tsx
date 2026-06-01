@@ -22,6 +22,20 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+const languageOptions = [
+  "English",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Japanese",
+  "Korean",
+  "Chinese",
+  "Russian",
+  "Portuguese",
+  "Turkish",
+];
+
 export default function ChatPage() {
   const { user, logout, isAuthenticated } = useAuthStore();
   const router = useRouter();
@@ -29,6 +43,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [language, setLanguage] = useState(() => user?.targetLanguage || "Polish");
+  const [nativeLanguage, setNativeLanguage] = useState(() => user?.nativeLanguage || "English");
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,6 +54,7 @@ export default function ChatPage() {
     setMessages([]);
     setInput("");
     setLanguage(user?.targetLanguage || "Polish");
+    setNativeLanguage(user?.nativeLanguage || "English");
     router.replace("/chat");
   };
 
@@ -56,7 +72,7 @@ export default function ChatPage() {
 
   // Clear messages when the language changes to prevent cross-language leakage
   useEffect(() => {
-    // Only clear messages when not viewing a saved conversation
+    // Only clear messages when not viewing a saved conversation.
     if (!convId) setMessages([]);
   }, [language, convId]);
 
@@ -115,7 +131,7 @@ export default function ChatPage() {
     setIsLoading(true);
 
     try {
-      const response = await chatService.sendMessage(input, language, convId);
+      const response = await chatService.sendMessage(input, language, convId, nativeLanguage);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
@@ -173,12 +189,39 @@ export default function ChatPage() {
                 </button>
                 <div className="pt-4 pb-2">
                   <span className="px-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                    Current Learning Language
+                    Language settings
                   </span>
                 </div>
-                <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-300">
-                  {language}
-                </div>
+                <label htmlFor="learning-language" className="block px-4 pb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Learning language
+                </label>
+                <select
+                  id="learning-language"
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-200 outline-none focus:ring-2 focus:ring-primary/40"
+                >
+                  {languageOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="native-language" className="block px-4 pt-4 pb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Your native language
+                </label>
+                <select
+                  id="native-language"
+                  value={nativeLanguage}
+                  onChange={(e) => setNativeLanguage(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-200 outline-none focus:ring-2 focus:ring-primary/40"
+                >
+                  {languageOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -267,7 +310,7 @@ export default function ChatPage() {
                 </button>
                 <button
                   onClick={() =>
-                    setInput(`Give me 5 beginner phrases in ${language} with short Turkish meanings.`)
+                    setInput(`Give me 5 beginner phrases in ${language} with short ${nativeLanguage} meanings.`)
                   }
                   className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm flex items-start gap-3"
                 >
