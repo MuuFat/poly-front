@@ -15,14 +15,14 @@ import { useAuthStore } from "@/store/authStore";
 export default function Home() {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
-  const [hasHydrated, setHasHydrated] = useState(useAuthStore.persist.hasHydrated());
+  const [hasHydrated, setHasHydrated] = useState(() => useAuthStore.persist?.hasHydrated?.() ?? false);
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+    const unsubscribe = useAuthStore.persist?.onFinishHydration?.(() => {
       setHasHydrated(true);
     });
 
-    if (useAuthStore.persist.hasHydrated()) {
+    if (useAuthStore.persist?.hasHydrated?.()) {
       setHasHydrated(true);
     }
 
