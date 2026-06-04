@@ -13,8 +13,8 @@ import {
   Languages,
 } from "lucide-react";
 import { chatService, Message } from "@/services/chatService";
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { marked } from 'marked';
+import DOMPurify from 'isomorphic-dompurify';
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
@@ -369,7 +369,7 @@ export default function ChatPage() {
                 )}
               >
                 {msg.role === 'assistant' ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                  <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parse(msg.content)) }} />
                 ) : (
                   msg.content
                 )}
