@@ -27,13 +27,11 @@ export const chatService = {
     message: string,
     language: string,
     conversationId?: string | null,
-    nativeLanguage?: string
   ): Promise<SendMessageResponse> {
     const response = await api.post('/api/ai/chat', {
       message,
       language,
       conversationId,
-      nativeLanguage,
     });
     return response.data;
   },
