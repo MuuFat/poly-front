@@ -154,6 +154,29 @@ function buildConversationContextMessages(conversation) {
     }));
 }
 
+async function detectLanguage(text) {
+    try {
+        const system = 'You are a language detection utility. Respond with the single best language name that the user text is written in (for example: English, Polish, Spanish, Turkish). Reply with only the language name and no additional text.';
+        const completion = await openai.chat.completions.create({
+            model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+            messages: [
+                { role: 'system', content: system },
+                { role: 'user', content: String(text) }
+            ],
+            temperature: 0,
+            max_tokens: 8
+        });
+
+        const detected = completion.choices?.[0]?.message?.content?.trim();
+        if (!detected) return null;
+        // Normalize common variants
+        return detected.replace(/[^A-Za-z\s-]/g, '').trim();
+    } catch (err) {
+        console.error('Language detection failed:', err);
+        return null;
+    }
+}
+
 async function persistConversationExchange({ conversationId, userId, language, message, reply }) {
     const hasConversationId = isNonEmptyString(conversationId, 1, 64);
     if (hasConversationId && !mongoose.Types.ObjectId.isValid(conversationId)) {
@@ -206,9 +229,18 @@ router.post('/chat', auth, async (req, res) => {
             return res.status(400).json({ message: 'Missing or invalid `nativeLanguage`' });
         }
 
-        const resolvedNativeLanguage = isValidLanguageName(nativeLanguage)
-            ? nativeLanguage.trim()
-            : 'English';
+        let resolvedNativeLanguage;
+        if (isValidLanguageName(nativeLanguage)) {
+            resolvedNativeLanguage = nativeLanguage.trim();
+        } else {
+            // Attempt to detect the user's native language from their message
+            const detected = await detectLanguage(message);
+            if (detected && isValidLanguageName(detected) && String(detected).toLowerCase() !== String(language).toLowerCase()) {
+                resolvedNativeLanguage = detected;
+            } else {
+                resolvedNativeLanguage = 'English';
+            }
+        }
 
         if (isClearlyOffTopicRequest(message, language)) {
             return res.json({
