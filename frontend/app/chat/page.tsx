@@ -209,11 +209,7 @@ export default function ChatPage() {
                   <History className="w-5 h-5" />
                   <span>History</span>
                 </button>
-                <div className="pt-4 pb-2">
-                  <span className="px-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                    Language settings
-                  </span>
-                </div>
+                {/* Language settings heading removed per UI update */}
                 <label htmlFor="learning-language" className="block px-4 pb-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
                   Learning language
                 </label>
