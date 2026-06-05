@@ -25,6 +25,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const languageOptions = [
+  "Polish",
   "English",
   "Spanish",
   "French",
