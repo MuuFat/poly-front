@@ -404,7 +404,7 @@ export default function ChatPage() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={`Message PolyLingo in ${language}...`}
+              placeholder={`Message PolyLingo to learn ${language}...`}
               className="w-full bg-zinc-900/80 border border-white/10 rounded-2xl py-4 pl-6 pr-16 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all backdrop-blur-xl group-hover:border-white/20"
             />
             <button
