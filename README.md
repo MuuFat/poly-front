@@ -1,6 +1,6 @@
 # Polylingo
 
-Polylingo is an AI powered language learning app for practicing Polish. The project uses a Next.js frontend and a Node.js/Express backend with MongoDB, JWT authentication, OpenAI-powered chat, and persisted conversation history.
+Polylingo is an AI powered language learning app for practicing Polish. The project uses a Next.js frontend and a Node.js/Express backend with MongoDB, JWT authentication, OpenAI powered chat, and persisted conversation history.
 
 This README is the main project overview for the repository. It explains what the app does, how to run it locally, what environment variables are needed, what the backend API looks like, how data is stored, and what the frontend needs to know.
 
